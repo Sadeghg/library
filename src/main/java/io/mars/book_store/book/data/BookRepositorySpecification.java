@@ -10,6 +10,11 @@ import java.util.List;
 
 public class BookRepositorySpecification {
 
+    public static Specification<Book> base(){
+        return ((root, query, criteriaBuilder) ->
+                criteriaBuilder.conjunction());
+    }
+
     public static Specification<Book> writer(String name){
         return ((root, query, criteriaBuilder) ->
                 criteriaBuilder.equal(root.join("writers").get("name"), name));
@@ -49,11 +54,11 @@ public class BookRepositorySpecification {
         if (writer != null) specList.add(writer(writer));
         if (translator != null) specList.add(translator(translator));
         if (publishAt != null) specList.add(publishAt(LocalDate.parse(publishAt)));
-        if (publishAfter != null) specList.add(publishAt(LocalDate.parse(publishAfter)));
-        if (publishBefore != null) specList.add(publishAt(LocalDate.parse(publishBefore)));
+        if (publishAfter != null) specList.add(publishAfter(LocalDate.parse(publishAfter)));
+        if (publishBefore != null) specList.add(publishBefore(LocalDate.parse(publishBefore)));
 
         return specList.stream()
                 .reduce(Specification::and)
-                .orElseThrow(() -> new ContentNotFoundException("no specification has provided"));
+                .orElseGet(BookRepositorySpecification::base);
     }
 }
