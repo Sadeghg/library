@@ -14,6 +14,6 @@ public interface BookService {
     Optional<Book> findByIsbn(String isbn);
 
     List<Book> works(String name);
-    List<Book> find(String title, String writer, String translator, String publish);
+    List<Book> find(String title, String writer, String translator, String publishAfter, String publishAt, String publishBefore);
 
 }

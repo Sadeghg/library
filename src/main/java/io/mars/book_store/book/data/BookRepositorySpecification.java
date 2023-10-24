@@ -25,19 +25,32 @@ public class BookRepositorySpecification {
                 cb.equal(root.get("title"), title));
     }
 
-    public static Specification<Book> publish(LocalDate date){
+    public static Specification<Book> publishAt(LocalDate date){
+        return ((root, query, criteriaBuilder) ->
+                criteriaBuilder.equal(root.get("publishDate"), date));
+    }
+
+    public static Specification<Book> publishBefore(LocalDate date){
+        return ((root, query, criteriaBuilder) ->
+                criteriaBuilder.lessThan(root.get("publishDate"), date));
+    }
+
+    public static Specification<Book> publishAfter(LocalDate date){
         return ((root, query, criteriaBuilder) ->
                 criteriaBuilder.greaterThan(root.get("publishDate"), date));
     }
 
-    public static Specification<Book> findBooksBy(String title, String writer, String translator, String publish) {
+    public static Specification<Book> findBooksBy(String title, String writer, String translator,
+                                                  String publishAfter, String publishAt, String publishBefore) {
 
         List<Specification<Book>> specList = new ArrayList<>();
 
         if (title != null) specList.add(title(title));
         if (writer != null) specList.add(writer(writer));
         if (translator != null) specList.add(translator(translator));
-        if (publish != null) specList.add(publish(LocalDate.parse(publish)));
+        if (publishAt != null) specList.add(publishAt(LocalDate.parse(publishAt)));
+        if (publishAfter != null) specList.add(publishAt(LocalDate.parse(publishAfter)));
+        if (publishBefore != null) specList.add(publishAt(LocalDate.parse(publishBefore)));
 
         return specList.stream()
                 .reduce(Specification::and)

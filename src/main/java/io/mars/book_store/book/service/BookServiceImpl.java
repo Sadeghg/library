@@ -44,8 +44,8 @@ public class BookServiceImpl implements BookService {
     }
 
     @Override
-    public List<Book> find(String title, String writer, String translator, String publish) {
-        Specification<Book> specification = findBooksBy(title, writer, translator, publish);
+    public List<Book> find(String title, String writer, String translator, String publishAfter, String publishAt, String publishBefore) {
+        Specification<Book> specification = findBooksBy(title, writer, translator,  publishAfter, publishAt, publishBefore);
         return bookRepository.findAll(specification);
 }
 }

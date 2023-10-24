@@ -31,7 +31,9 @@ public class BookController {
     private ResponseEntity<List<Book>> find(@RequestParam(name = "title", required = false) String title,
                                             @RequestParam(name = "writer", required = false) String writer,
                                             @RequestParam(name = "translator", required = false) String translator,
-                                            @RequestParam(name = "publish", required = false) String publish) {
-        return ResponseEntity.ok(bookService.find(title, writer, translator, publish));
+                                            @RequestParam(name = "publish-after", required = false) String publishAfter,
+                                            @RequestParam(name = "publish-before", required = false) String publishBefore,
+                                            @RequestParam(name = "publish-at", required = false) String publishAt) {
+        return ResponseEntity.ok(bookService.find(title, writer, translator, publishAfter, publishAt, publishBefore));
     }
 }
