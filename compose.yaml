@@ -1,0 +1,33 @@
+version: '3.8'
+
+services:
+  mysql:
+    image: mysql:latest
+    environment:
+      MYSQL_ROOT_PASSWORD: my-secret-pw
+      MYSQL_DATABASE: library
+    ports:
+      - "3307:3306"
+    networks:
+      - library-network
+    volumes:
+      - mysql_data:/var/lib/mysql
+
+  spring-app:
+    image: library:latest
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:mysql://mysql:3307/library
+      SPRING_DATASOURCE_USERNAME: root
+      SPRING_DATASOURCE_PASSWORD: my-secret-pw
+    ports:
+      - "9090:8080"
+    depends_on:
+      - mysql
+    networks:
+      - library-network
+
+networks:
+  library-network:
+    driver: bridge
+volumes:
+  mysql_data:

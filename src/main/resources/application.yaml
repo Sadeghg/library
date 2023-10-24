@@ -2,7 +2,7 @@ spring:
   datasource:
     username: root
     password: my-secret-pw
-    url: jdbc:mysql://localhost:3306/library
+    url: jdbc:mysql://localhost:3307/library
   jpa:
     hibernate:
       ddl-auto: none
