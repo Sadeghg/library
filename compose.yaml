@@ -14,9 +14,9 @@ services:
       - mysql_data:/var/lib/mysql
 
   spring-app:
-    image: library:latest
+    image: library:start
     environment:
-      SPRING_DATASOURCE_URL: jdbc:mysql://mysql:3307/library
+      SPRING_DATASOURCE_URL: jdbc:mysql://mysql:3306/library
       SPRING_DATASOURCE_USERNAME: root
       SPRING_DATASOURCE_PASSWORD: my-secret-pw
     ports:
