@@ -26,9 +26,11 @@ services:
       - mysql
     networks:
       - library-network
-
+    volumes:
+      - D:/reports:/var/library-reports
 networks:
   library-network:
     driver: bridge
 volumes:
   mysql_data:
+  reports_data:

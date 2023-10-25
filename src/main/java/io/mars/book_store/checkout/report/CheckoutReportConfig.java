@@ -28,6 +28,10 @@ public class CheckoutReportConfig {
 
     private final DataSource dataSource;
 
+    private static final String REPORTS_PATH = "/var/library-reports/";
+    private static final String STEP_NAME = "checkout-sql-read";
+    private static final String JOB_NAME = "import-book-checkouts";
+
     private String query = "SELECT c.name, c.last_name, b.title, b.isbn,  ch.start, ch.end, ch.deadline \n" +
             "FROM checkout ch \n" +
             "JOIN customer c \n" +
@@ -52,7 +56,7 @@ public class CheckoutReportConfig {
     @StepScope
     public FlatFileItemWriter<CheckoutCSVDTO> writer(@Value("#{jobParameters['date']}") String fileName) {
         FlatFileItemWriter<CheckoutCSVDTO> writer = new FlatFileItemWriter<>();
-        FileSystemResource resource = new FileSystemResource("src/main/resources/reports/"+fileName+".csv");
+        FileSystemResource resource = new FileSystemResource(REPORTS_PATH + fileName + ".csv");
         DelimitedLineAggregator<CheckoutCSVDTO> aggregator = new DelimitedLineAggregator<>();
         BeanWrapperFieldExtractor<CheckoutCSVDTO> fieldExtractor = new BeanWrapperFieldExtractor<>();
         fieldExtractor.setNames(new String[]{"fullName", "bookInfo", "duration", "start", "deadline"});
@@ -63,7 +67,7 @@ public class CheckoutReportConfig {
 
     @Bean
     public Step executeStep(JobRepository jobRepository, PlatformTransactionManager transactionManager) {
-        return new StepBuilder("category-sql-read", jobRepository)
+        return new StepBuilder(STEP_NAME, jobRepository)
                 .<CheckoutCSVDTO, CheckoutCSVDTO>chunk(10, transactionManager)
                 .reader(itemReader())
                 .writer(writer(null))
@@ -72,7 +76,7 @@ public class CheckoutReportConfig {
 
     @Bean("get-checkout-history")
     public Job proccessJob(JobRepository jobRepository, PlatformTransactionManager transactionManager) {
-        return new JobBuilder("import-categories", jobRepository)
+        return new JobBuilder(JOB_NAME, jobRepository)
                 .incrementer(new RunIdIncrementer())
                 .start(executeStep(jobRepository, transactionManager))
                 .build();
